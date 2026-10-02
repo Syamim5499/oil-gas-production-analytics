@@ -56,6 +56,14 @@ def test_load_idempotence_sql_nulls_and_atomic_rollback(sample_snapshot, tmp_pat
             cur.execute("DROP FUNCTION core.reject_insert()")
     with pytest.raises(ValueError, match="different snapshot"):
         load_snapshot(path, "test-baseline", DSN)
+    # A negative prior-year net baseline does not support a growth percentage.
+    sample_snapshot["production"][0]["prfPrdOeNetMillSm3"] = -3.0
+    path.write_text(json.dumps(sign(sample_snapshot)))
+    load_snapshot(path, "test-signed-baseline", DSN)
+    with db() as c:
+        with c.cursor() as cur:
+            cur.execute("SELECT yoy_daily_rate_pct FROM mart.field_monthly ORDER BY month DESC LIMIT 1")
+            assert cur.fetchone()[0] is None
     output = tmp_path / "dashboard.json"
     export_dashboard(str(output), DSN)
     exported = json.loads(output.read_text())

@@ -96,7 +96,7 @@ The loader creates its schemas and tables. Use a **new run ID for a new extracti
 
 Oil/NGL/condensate: **million standard cubic metres (million Sm³)**. Gas: **billion standard cubic metres (billion Sm³)**. Oil equivalent: the source's reported **million Sm³ o.e.** value; it is not a barrel figure and is not reconstructed from the components. Liquid composition excludes gas.
 
-YoY daily-rate change compares the same field in the same calendar month of the preceding year, dividing each monthly volume by its own days in month. An absent or zero baseline yields `NULL`, not infinity. A ≤−20% change flags a review, not proven downtime, reservoir decline or a causal event. Top-three share uses positive field output as the denominator; portfolio totals retain signed values.
+YoY daily-rate change compares the same field in the same calendar month of the preceding year, dividing each monthly volume by its own days in month. An absent, zero or negative baseline yields `NULL`, because it does not support a meaningful growth percentage. A ≤−20% change flags a review, not proven downtime, reservoir decline or a causal event. Top-three share uses positive field output as the denominator; portfolio totals retain signed values.
 
 Current-operator metadata is applied to historical records as a current classification. The operator chart/query is not a historical ownership or equity-production calculation. Source coverage may vary by month; missing field-month observations are not zero. The dashboard reports missing and negative measures. It contains no prices, demand, inventory, emissions, reserves, revenues or forecasts.
 

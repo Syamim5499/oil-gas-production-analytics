@@ -4,9 +4,10 @@ SELECT f.field_id, d.field_name, d.region, d.current_operator, d.current_status,
        f.month, f.oil_msm3, f.gas_bsm3, f.ngl_msm3, f.condensate_msm3, f.oe_msm3,
        f.oe_msm3 / extract(day FROM (f.month + interval '1 month - 1 day')) AS oe_msm3_per_day,
        p.oe_msm3 AS prior_year_oe_msm3,
+       CASE WHEN p.oe_msm3 > 0 THEN
        100 * ((f.oe_msm3 / extract(day FROM (f.month + interval '1 month - 1 day'))) /
          NULLIF(p.oe_msm3 / extract(day FROM (p.month + interval '1 month - 1 day')), 0) - 1)
-         AS yoy_daily_rate_pct,
+       END AS yoy_daily_rate_pct,
        (f.oil_msm3 < 0 OR f.gas_bsm3 < 0 OR f.ngl_msm3 < 0
         OR f.condensate_msm3 < 0 OR f.oe_msm3 < 0) AS has_negative_measure
 FROM core.fact_production_monthly f

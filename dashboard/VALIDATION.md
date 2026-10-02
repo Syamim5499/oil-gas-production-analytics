@@ -13,7 +13,7 @@
 - **14 Python tests passed**, including database integration: null preservation, calendar YoY calculation, retry idempotence, changed-snapshot/run-ID rejection, atomic rollback of raw/core writes after an injected SQL error, and JSON/gzip/CSV export.
 - **7 JavaScript tests passed**: filters, aggregation, missing measures, missing calendar months, baseline screening, leap-year month length and CSV quoting.
 - Python compilation and JavaScript syntax checks passed. Compose YAML parsed successfully.
-- A GitHub Actions workflow is included to repeat integration checks against PostgreSQL 16 and run `docker compose config -q`.
+- GitHub Actions completed successfully against **native PostgreSQL 16**, including the integration test and `docker compose config -q`: [validation run](https://github.com/Syamim5499/oil-gas-production-analytics/actions/runs/37031430087). GitHub Pages deployment also completed successfully.
 
 ## Example observations from the July 2026 snapshot
 
@@ -34,4 +34,4 @@ The complete historical extract contains **79 records with a negative net measur
 
 ## Limits
 
-The Airflow scheduler/webserver Docker stack has not been executed in the authoring workspace. PGlite validates PostgreSQL semantics and the client load path, but is not a production server and does not prove container startup or native concurrent-server behavior. API source data can be revised. The public dashboard is a dated snapshot; the provided DAG and export commands enable refresh on the user's machine.
+The Airflow scheduler/webserver Docker stack has not been executed in the authoring workspace. Local PGlite checks and native PostgreSQL CI validate the load/export and SQL analytics; they do not prove Airflow container startup. API source data can be revised. The public dashboard is a dated snapshot; the provided DAG and export commands enable refresh on the user's machine.
