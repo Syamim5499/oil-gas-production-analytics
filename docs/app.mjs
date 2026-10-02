@@ -60,7 +60,7 @@ function render(){
   const rateChange=consecutive&&previous.oe>0&&current.oe!==null?(current.oe/daysInMonth(current.month)/(previous.oe/daysInMonth(previous.month))-1)*100:null;
   const delta=rateChange===null?'Previous calendar month unavailable':`${rateChange>=0?'+':''}${fmt(rateChange,1)}% vs prior month daily rate`;
   const cards=[['NET OIL EQUIVALENT',current.oe,'million Sm³ o.e.',delta],['NET OIL',current.oil,'million standard m³','Reported monthly net volume'],['NET GAS',current.gas,'billion standard m³','Reported monthly net volume'],['PRODUCING FIELDS',current.producing,'fields with positive net o.e.',`${current.reported} field records reported`]];
-  $('kpis').innerHTML=cards.map(([label,value,unit,detail])=>`<div class="kpi"><div class="label">${label}</div><div class="value">${fmt(value,label==='PRODUCING FIELDS'?0:2)}</div><div class="unit">${unit}</div><div class="delta">${detail}</div></div>`).join('');
+  $('kpis').innerHTML=cards.map(([label,value,unit,detail])=>`<div class="kpi"><div class="label">${label}</div><div class="value">${fmt(value,label==='PRODUCING FIELDS'?0:value!==null&&value!==0&&Math.abs(value)<0.01?6:2)}</div><div class="unit">${unit}</div><div class="delta">${detail}</div></div>`).join('');
   const length=$('window').value;let trend=allMonths.filter(r=>r.month<=month);if(length!=='all')trend=trend.slice(-Number(length));
   $('trend').innerHTML=lineChart(trend);$('mix').innerHTML=mixChart(current);$('ranking').innerHTML=barChart(visible);
   const top3=visible.filter(r=>r.oe_msm3>0).slice(0,3).reduce((s,r)=>s+r.oe_msm3,0);
@@ -73,7 +73,7 @@ function render(){
 }
 
 async function init(){
-  const response=await fetch('./data/dashboard.json.gz');if(!response.ok)throw Error('Unable to load the warehouse export');
+  const response=await fetch('./data/dashboard.json.gz',{cache:'no-cache'});if(!response.ok)throw Error('Unable to load the warehouse export');
   const decompressed=response.body.pipeThrough(new DecompressionStream('gzip'));
   data=await new Response(decompressed).json();if(!Array.isArray(data.rows)||!data.rows.length)throw Error('The export has no production records');
   const regions=[...new Set(data.rows.map(r=>r.region))].sort();
