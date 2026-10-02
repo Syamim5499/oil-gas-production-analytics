@@ -1,0 +1,13 @@
+// Create these as separate measures on the imported Production table.
+Net Oil Equivalent = SUM(Production[oe_msm3])
+Net Oil = SUM(Production[oil_msm3])
+Net Gas = SUM(Production[gas_bsm3])
+Net NGL = SUM(Production[ngl_msm3])
+Net Condensate = SUM(Production[condensate_msm3])
+Producing Fields =
+    CALCULATE(DISTINCTCOUNT(Production[field_id]), Production[oe_msm3] > 0)
+Reported Fields = DISTINCTCOUNT(Production[field_id])
+Negative Measure Records =
+    CALCULATE(COUNTROWS(Production), Production[has_negative_measure] = TRUE())
+// Use the field/month SQL yoy_daily_rate_pct column in the review queue;
+// do not SUM that percentage across fields or months.

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Oil and gas production analytics using official Norwegian Offshore Directorate public data.">
+  <title>Offshore Pulse · Oil & Gas BI</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.mjs"></script>
+</head>
+<body>
+<aside>
+  <div class="brand"><span class="brandmark">◈</span> OFFSHORE<br><b>PULSE</b></div>
+  <p class="aside-label">PRODUCTION INTELLIGENCE</p>
+  <a href="#overview" class="nav active">◉ &nbsp; Portfolio overview</a>
+  <a href="#fields" class="nav">▥ &nbsp; Field performance</a>
+  <a href="#method" class="nav">◇ &nbsp; Data & methodology</a>
+  <div class="aside-bottom"><span class="dot"></span> Official public data<br><small>Norwegian continental shelf<br>Educational industry case study</small></div>
+</aside>
+<main id="overview">
+  <header><div><span class="eyebrow">UPSTREAM ANALYTICS / NORWAY</span><h1>Oil & gas production</h1><p class="subtitle">From monthly field reports to a clear portfolio view.</p></div><a class="outline" href="https://github.com/Syamim5499/oil-gas-production-analytics" target="_blank" rel="noopener">View pipeline ↗</a></header>
+  <div class="sourcebar"><span><span class="dot"></span> SODIR · Official monthly production</span><span id="freshness">Loading warehouse export…</span></div>
+  <div id="error" role="alert" hidden></div>
+  <section class="filters" aria-label="Dashboard filters">
+    <label>REGION<select id="region"><option value="all">All regions</option></select></label>
+    <label>FIELD<select id="field"><option value="all">All fields</option></select></label>
+    <label>REPORT MONTH<select id="month"></select></label>
+    <label>TREND WINDOW<select id="window"><option value="24">Last 24 months</option><option value="12">Last 12 months</option><option value="all">Full history</option></select></label>
+    <button id="reset" class="outline">Reset filters</button>
+  </section>
+  <section id="kpis" class="kpis" aria-label="Key performance indicators"></section>
+  <section class="grid">
+    <article class="panel trend"><div class="panel-head"><div><span class="eyebrow">01 / PRODUCTION TREND</span><h2>Monthly net oil equivalent</h2></div><span class="chip">million Sm³ o.e.</span></div><div id="trend"></div><p class="note">Reported monthly volumes. Month length and field coverage affect comparisons.</p></article>
+    <article class="panel"><div class="panel-head"><div><span class="eyebrow">02 / PRODUCT MIX</span><h2>Liquid production split</h2></div></div><div id="mix"></div><p class="note">Oil, NGL and condensate share the same unit. Gas is displayed separately in the KPI cards.</p></article>
+    <article class="panel" id="fields"><div class="panel-head"><div><span class="eyebrow">03 / FIELD CONCENTRATION</span><h2>Largest producing fields</h2></div><span class="chip">Top 10</span></div><div id="ranking"></div><p id="concentration" class="note"></p></article>
+    <article class="panel"><div class="panel-head"><div><span class="eyebrow">04 / REVIEW QUEUE</span><h2>Output decline screening</h2></div><span class="chip amber">YoY ≤ −20%</span></div><p class="note">Same calendar month, adjusted for days. Previous-year baseline ≥ 0.01 million Sm³ o.e.</p><div class="table-scroll"><table><thead><tr><th>Field</th><th>Net o.e.</th><th>YoY rate</th></tr></thead><tbody id="declines"></tbody></table></div><p class="note">A screening signal for further investigation; it does not establish outages or reservoir decline.</p></article>
+  </section>
+  <section class="panel detail"><div class="panel-head"><div><span class="eyebrow">EXPLORE / MONTHLY RECORDS</span><h2>Field detail</h2></div><button id="download" class="outline">Download selection CSV ↓</button></div><p id="coverage" class="note"></p><div class="table-scroll"><table><thead><tr><th>Field</th><th>Region</th><th>Current operator</th><th>Oil<br><small>million Sm³</small></th><th>Gas<br><small>billion Sm³</small></th><th>Net o.e.<br><small>million Sm³ o.e.</small></th><th>YoY daily rate</th></tr></thead><tbody id="details"></tbody></table></div></section>
+  <section id="method" class="method"><h2>A transparent data journey</h2><div class="journey"><span>Public REST API</span><i>→</i><span>Airflow validation</span><i>→</i><span>PostgreSQL marts</span><i>→</i><span>BI snapshot</span></div><p>This viewer uses an exported PostgreSQL mart snapshot. The Airflow DAG refreshes it after each successful warehouse load. The report month reflects source availability, not today’s date. Negative reported net measures are preserved and flagged for review. Missing measures stay missing; missing field-month records are never assumed to be zero.</p><p>Operator is the current field operator, applied to historical records for exploration. Volumes are reported field production, not operator equity production, reserves, revenue or profit. No forecast is shown. Source: <a href="https://www.sodir.no/en/facts/data-and-analyses/open-data/" target="_blank" rel="noopener">Norwegian Offshore Directorate</a> · <a href="https://data.norge.no/nlod/en/2.0" target="_blank" rel="noopener">NLOD open-data licence</a>.</p><small id="audit"></small></section>
+  <footer>OFFSHORE PULSE <span>Built as an oil & gas data engineering portfolio case study.</span></footer>
+</main>
+</body></html>
